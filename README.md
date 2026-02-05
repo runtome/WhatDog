@@ -146,3 +146,82 @@ The server will print logs to console. Keep the terminal open to see them.
 | qwen2.5:1.5b | 934MB | ⚡⚡⚡ | ⭐⭐ | Fastest, smallest |
 
 For CPU servers, I recommend starting with **llama3.2:1b** or **gemma2:2b**.
+
+## 11. Create a service for your Waitress app
+
+### Create service file:
+```bash
+sudo nano /etc/systemd/system/whatdog.service
+```
+
+### Paste this (adjust paths if needed)
+```bash
+[Unit]
+Description=Whatdog Flask App (Waitress)
+After=network.target
+
+[Service]
+User=serverapp
+WorkingDirectory=/home/serverapp/whatdog
+ExecStart=/home/serverapp/.venv/bin/waitress-serve --listen=0.0.0.0:5000 main:app
+Restart=always
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+```
+⚠️ If you’re not using venv, change ExecStart to:
+
+```bash
+/usr/bin/waitress-serve --listen=0.0.0.0:5000 main:app
+```
+
+### Enable & start
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable whatdog
+sudo systemctl start whatdog
+```
+
+### View logs (this is your “screen”)
+```bash
+journalctl -u whatdog -f
+```
+
+## 12. Create a service for ngrok
+
+### Create service file:
+```bash
+sudo nano /etc/systemd/system/ngrok.service
+```
+
+### Paste this (adjust paths if needed)
+```bash
+[Unit]
+Description=ngrok Tunnel
+After=network.target
+
+[Service]
+User=serverapp
+ExecStart=/usr/local/bin/ngrok http 5000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+If ngrok is elsewhere:
+
+```bash
+which ngrok
+```
+### Enable & start
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable ngrok
+sudo systemctl start ngrok
+```
+
+### View logs (this is your “screen”)
+```bash
+journalctl -u ngrok -f
+```
