@@ -4,7 +4,7 @@
 
 ```bash
 # Make sure you're in your project directory
-cd ~/whatdog
+cd ~/WhatDog
 
 # Activate virtual environment
 source venv/bin/activate
@@ -80,6 +80,7 @@ Your project should look like this:
 ```
 ~/whatdog/
 ├── venv/                    # Virtual environment
+├── logs/                    # Saved logs
 ├── images/                  # Saved dog images
 ├── main.py                  # Main bot file (basic version)
 ├── main_with_ollama.py      # Bot with AI chat (if using Ollama)
@@ -124,6 +125,13 @@ ollama serve
 
 ### NNPACK warnings (safe to ignore):
 These are harmless warnings. The model still works correctly.
+
+### Test Systems
+```bash
+# Check all systems are ready.
+python test_model_fixed.py
+
+```
 
 ## 9. Monitoring
 
